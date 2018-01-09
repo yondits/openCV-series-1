@@ -1,0 +1,46 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf200
+{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;\red53\green53\blue53;}
+{\*\expandedcolortbl;;\cssrgb\c27059\c27059\c27059;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab560
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\fs24 \cf2 # Image Processing:Syntax - Thresholding and Bitwise Ops\
+\pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
+\cf2 \
+import cv2\
+import numpy as np\
+\
+# 500 x 250\
+img1 = cv2.imread('3D-Matplotlib.png')\
+img2 = cv2.imread('mainlogo.png')\
+\
+#dimensions of img2, the logo\
+rows,cols,channels = img2.shape\
+#roi is the dimension of the logo\
+roi = img1[0:rows, 0:cols]\
+\
+img2gray =cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)\
+#if pixel is 220, it is converted to 255\
+ret, mask = cv2.threshold(img2gray, 220, 255, cv2.THRESH_BINARY_INV)\
+\
+#not operation, white ung background tapos binlock yung logo\
+mask_inv = cv2.bitwise_not(mask)\
+\
+#kinuha yung size ni logo tapos tapos tinanggal yung mask?\
+img1_bg = cv2.bitwise_and(roi, roi, mask = mask_inv)\
+#\
+img2_fg = cv2.bitwise_and(img2, img2, mask = mask)\
+\
+dst = cv2.add(img1_bg,img2_fg)\
+\
+img1[0:rows, 0:cols] = dst\
+\
+cv2.imshow('add',img1)\
+cv2.imshow('add1',mask_inv)\
+cv2.imshow('add2',img1_bg)\
+cv2.imshow('add3',img2gray)\
+cv2.waitKey(0)\
+cv2.destroyAllWindows()\
+}
